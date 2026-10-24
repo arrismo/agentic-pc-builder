@@ -8,6 +8,12 @@ services:
     envVars:
       - key: EXA_API_KEY
         sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MODEL_PROVIDER
+        value: groq
+      - key: MODEL_NAME
+        sync: false
       - key: WHOP_API_KEY
         sync: false
       - key: WHOP_PLAN_ID

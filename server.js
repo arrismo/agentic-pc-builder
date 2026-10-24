@@ -28,6 +28,24 @@ async function researchParts(req, res) {
   } catch (error) { return sendJson(res, 500, {error:'Unable to research parts right now.'}); }
 }
 
+async function checkCompatibility(req, res) {
+  if (!process.env.GROQ_API_KEY) return sendJson(res, 503, {error:'Compatibility agent is not configured.'});
+  try {
+    const body = await readBody(req);
+    const prompt = `You are a PC hardware compatibility reviewer. Review this proposed build and existing parts. Do not invent specifications. If a fact is unknown, mark it unverified. Return JSON only in this shape: {"status":"pass|issues|incomplete","summary":"short summary","checks":[{"name":"check name","status":"pass|issue|unverified","detail":"brief detail"}]}. Check CPU socket/chipset, memory type, motherboard/case form factor, GPU clearance, cooler fit, PSU wattage/connectors, storage interface, and whether existing parts can be reused.\n\nUse case: ${body.use_case || 'not provided'}\nBudget: $${body.budget || 'not provided'}\nRequested changes: ${body.modifications || 'none'}\nExisting parts: ${body.existing_parts || 'none'}\nProposed parts:\n${JSON.stringify(body.parts || [], null, 2)}`;
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method:'POST',
+      headers:{'Authorization':`Bearer ${process.env.GROQ_API_KEY}`,'Content-Type':'application/json'},
+      body:JSON.stringify({model:process.env.MODEL_NAME || 'openai/gpt-oss-120b',temperature:0.1,max_tokens:1200,messages:[{role:'system',content:'Return valid JSON only.'},{role:'user',content:prompt}]})
+    });
+    const data = await response.json();
+    if (!response.ok) return sendJson(res, response.status, {error:data?.error?.message || 'Compatibility review failed.'});
+    const content = data.choices?.[0]?.message?.content || '';
+    const parsed = JSON.parse(content.replace(/^```json\s*|\s*```$/g,''));
+    return sendJson(res, 200, parsed);
+  } catch (error) { return sendJson(res, 500, {error:'Compatibility review could not be completed.'}); }
+}
+
 async function createWhopCheckout(req, res) {
   if (!process.env.WHOP_API_KEY || !process.env.WHOP_PLAN_ID) {
     return sendJson(res, 503, {error:'Whop is not configured yet. Add WHOP_API_KEY and WHOP_PLAN_ID in Render environment variables.'});
@@ -57,6 +75,7 @@ function sendJson(res,status,data){res.writeHead(status,{'Content-Type':'applica
 
 http.createServer((req,res)=>{
   if (req.method === 'POST' && req.url === '/api/research') return researchParts(req,res);
+  if (req.method === 'POST' && req.url === '/api/compatibility') return checkCompatibility(req,res);
   if (req.method === 'POST' && req.url === '/api/whop/checkout') return createWhopCheckout(req,res);
   const requested = decodeURIComponent(req.url.split('?')[0]);
   const file = path.join(root, requested === '/' ? 'index.html' : requested);
