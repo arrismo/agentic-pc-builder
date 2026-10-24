@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: speccheck
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: EXA_API_KEY
+        sync: false
+      - key: WHOP_API_KEY
+        sync: false
+      - key: WHOP_PLAN_ID
+        sync: false
+      - key: WHOP_REDIRECT_URL
+        sync: false
+      - key: WHOP_API_BASE_URL
+        value: https://api.whop.com/api/v1

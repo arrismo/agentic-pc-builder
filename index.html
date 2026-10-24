@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SpecCheck — a researched, compatibility-checked PC build plan." />
+  <title>SpecCheck — Your next PC, figured out.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header class="topbar shell">
+    <a class="brand" href="#top" aria-label="SpecCheck home"><span class="brand-mark">⌁</span> SpecCheck</a>
+  </header>
+
+  <main id="top" class="shell">
+    <section class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span> PC build advisor <span class="eyebrow-line"></span></div>
+      <h1>Your next PC, <em>figured out.</em></h1>
+      <p class="hero-copy">Tell us what you need. We research the parts, check every connection, and turn the noise into a build you can trust.</p>
+    </section>
+
+    <section class="workspace" aria-label="Build planner">
+      <aside class="intake-panel panel">
+        <div class="panel-heading"><span class="step">01</span><div><h2>Start with the brief</h2><p>A few useful constraints. No jargon required.</p></div></div>
+        <form id="build-form">
+          <label>What are you building for?
+            <select id="use-case"><option value="gaming">Gaming</option><option value="creator">Creative work</option><option value="workstation">Workstation</option><option value="general">Everyday use</option></select>
+          </label>
+          <label>Budget <span class="label-note">USD · before tax</span>
+            <div class="money-input"><span>$</span><input id="budget" type="number" value="1800" min="500" step="50" /></div>
+          </label>
+          <label>Parts you already have <span class="label-note">optional</span><textarea id="existing-parts" rows="3" placeholder="e.g. RTX 4070, 2TB SSD, Windows license..."></textarea></label>
+          <label>What do you want to modify? <span class="label-note">optional</span><textarea id="notes" rows="3" placeholder="Tell us what you want changed in the build..."></textarea></label>
+          <button class="primary-button" type="submit"><span>Build my plan</span><b>↗</b></button>
+          <p class="form-footnote">Demo data is used for this preview. No purchase is made.</p>
+        </form>
+      </aside>
+
+      <section class="results-panel" id="results" aria-live="polite">
+        <div class="results-empty" id="empty-state"><div class="orbit"><span>✦</span></div><p class="eyebrow">Your plan will appear here</p><h2>Good builds start<br /><em>with good questions.</em></h2><p>We’ll turn your answers into a sourced parts list, compatibility report, and honest total.</p><div class="empty-detail"><span>⌁</span> Research stays on the server<br /><span>⌁</span> Hard compatibility checks are deterministic</div></div>
+        <div class="loading-state hidden" id="loading-state"><div class="loader"></div><p class="eyebrow">Coordinator at work</p><h2>Researching your<br /><em>best-fit build…</em></h2><div class="loading-list"><span>Searching current part sources <b>done</b></span><span>Verifying compatibility <b>done</b></span><span>Balancing budget and thermals <b>…</b></span></div></div>
+        <div class="plan hidden" id="plan">
+          <div class="plan-head"><div><div class="eyebrow">02 / proposed plan</div><h2>Solid 1440p gaming, <em>without the guesswork.</em></h2><p id="plan-description">A balanced, quiet-leaning build with room to grow.</p></div><div class="score"><span>fit score</span><strong>94</strong><small>/ 100</small></div></div>
+          <div class="summary-cards"><div><span>estimated total</span><strong id="total">$1,508</strong><small id="budget-note">$292 under your budget</small></div><div><span>compatibility</span><strong class="green">PASS</strong><small>8 checks completed</small></div><div><span>source status</span><strong id="source-status">DEMO</strong><small id="source-note">retailer links included</small></div></div>
+          <div class="section-title"><h3>Parts list</h3><span>prices shown in USD · demo snapshot</span></div>
+          <div class="existing-parts hidden" id="existing-parts-summary"><div class="existing-parts-heading">Using your parts</div><div class="parts-list" id="existing-parts-list"></div></div>
+          <div class="parts-list" id="parts-list"></div>
+          <div class="research-sources hidden" id="research-sources"><div class="section-title"><h3>Research sources</h3><span>powered by Exa</span></div><div id="source-list"></div></div>
+          <div class="checks-section"><div class="section-title"><h3>Compatibility report</h3><span>deterministic checks</span></div><div class="compat-grid"><div class="compat-pass"><b>✓</b><div><strong>All clear</strong><span>AM5 socket · DDR5 memory · ATX fit · GPU clearance · PSU headroom</span></div></div><div class="compat-note"><span>i</span><p>Prices and availability are demo data. Review retailer pages before buying.</p></div></div></div>
+          <div class="next-step"><div><span class="eyebrow">03 / ready when you are</span><h3>Your plan is ready to save</h3><p>Secure checkout is handled by Whop. Card details never touch SpecCheck.</p></div><strong class="plan-price">$10</strong></div>
+        </div>
+      </section>
+    </section>
+    <div class="pay-bar"><div><span class="eyebrow">SpecCheck build plan</span><strong>Get your researched plan <em>for $10.</em></strong></div><button class="secondary-button" id="checkout">Pay with Whop · $10 <b>↗</b></button></div>
+    <footer><span>speccheck / v0.1</span><span>Research-backed. Human-readable. No hard sell.</span></footer>
+  </main>
+  <div class="toast" id="toast">Secure Whop checkout ready.</div>
+  <script src="app.js"></script>
+</body>
+</html>
